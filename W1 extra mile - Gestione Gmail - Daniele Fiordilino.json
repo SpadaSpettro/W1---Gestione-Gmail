@@ -1,0 +1,207 @@
+{
+  "name": "W1 extra mile - Gestione Gmail - Daniele Fiordilino",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "Ciao!",
+        "name": "pippo",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Gls0TOSdaLzcFP5gtwTjN6CiPvKBjVV8",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Gls0TOSdaLzcFP5gtwTjN6CiPvKBjVV8"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        80
+      ],
+      "id": "8cfc1ac0-1208-49e3-801f-3fd7f89e9bed",
+      "name": "Create file from text",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "yFtMWGIpUi0iSkyM",
+          "name": "Google Drive OAuth2 API"
+        }
+      },
+      "notes": "Valori predefiniti dall'advisor:\nFile Content: ciao\nFile Name: pippo.txt"
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "watchWorkspace": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        80
+      ],
+      "id": "d8b160ac-49f0-405e-ba47-d5d94d52b57a",
+      "name": "Ricezione messaggio",
+      "webhookId": "71563781-a12c-4394-8c9c-f9dae51c6a46",
+      "executeOnce": false,
+      "credentials": {
+        "slackApi": {
+          "id": "rq8ahQiezbq07BaG",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        48,
+        80
+      ],
+      "id": "dc2b0698-0dfd-4662-adec-7ba94698b794",
+      "name": "Scarica file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "yFtMWGIpUi0iSkyM",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Scarica il file appena creato per inviarlo come allegato.",
+        "height": 256,
+        "width": 160,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "fae7217c-1db7-4f49-b453-5e0320e897d6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "sendTo": "danielefiordilino54@gmail.com",
+        "subject": "Il tuo file di Google Drive",
+        "emailType": "text",
+        "message": "È stato creato un nuovo file nel Google Drive associato a questa email. Il file è stato allegato a questo messaggio.",
+        "options": {
+          "appendAttribution": true,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        80
+      ],
+      "id": "f65883f3-af0f-4b7f-9abd-b1e1aeb51d7b",
+      "name": "Invia allegato",
+      "webhookId": "fce3bf4e-766f-411b-8834-85c9de5bce39",
+      "executeOnce": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "bn2PrEsQWHI2g4na",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Create file from text": {
+      "main": [
+        [
+          {
+            "node": "Scarica file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ricezione messaggio": {
+      "main": [
+        [
+          {
+            "node": "Create file from text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scarica file": {
+      "main": [
+        [
+          {
+            "node": "Invia allegato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0f8a2c22-7105-4fb6-acf0-cc924f16f440",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "285e6b7035d57255323414f2adfae0530b9d9fde4f34f40ef0775256340f9783"
+  },
+  "id": "pZyagSeN8NwsApW2",
+  "tags": [
+    {
+      "updatedAt": "2026-04-02T02:22:20.430Z",
+      "createdAt": "2026-04-02T02:22:20.430Z",
+      "id": "4cDUE6nfNbvVML0X",
+      "name": "Gmail"
+    },
+    {
+      "updatedAt": "2026-04-02T02:24:19.040Z",
+      "createdAt": "2026-04-02T02:24:19.040Z",
+      "id": "ExTLzdRyt6LJs0cw",
+      "name": "Google Drive"
+    },
+    {
+      "updatedAt": "2026-04-02T02:24:23.981Z",
+      "createdAt": "2026-04-02T02:24:23.981Z",
+      "id": "FFlCI8L38YjiyRSk",
+      "name": "Slack"
+    }
+  ]
+}

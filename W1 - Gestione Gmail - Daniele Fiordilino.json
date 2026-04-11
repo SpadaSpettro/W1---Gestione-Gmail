@@ -1,0 +1,711 @@
+{
+  "name": "W1 - Gestione Gmail - Daniele Fiordilino",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FLAWBE2H",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "text": "=Hai ricevuto una o più mail. Gli allegati sono stati salvati sul tuo <https://drive.google.com/drive/folders/{{ $json.parents[0] }}|Google Drive>.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        176,
+        -256
+      ],
+      "id": "f7fda3ff-6b79-45a5-a10d-79632ca590b4",
+      "name": "Send a message",
+      "webhookId": "6aabeb25-a892-45b3-a689-c7a1c4ed60ad",
+      "executeOnce": true,
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "oe9P2sr9oxB2nqo5",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -272,
+        -256
+      ],
+      "id": "0654a0d5-f068-434d-827e-8ccc035bb210",
+      "name": "Ricezione mail",
+      "executeOnce": false,
+      "retryOnFail": false,
+      "maxTries": 2,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "bn2PrEsQWHI2g4na",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "attachment_0",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Gls0TOSdaLzcFP5gtwTjN6CiPvKBjVV8",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Gls0TOSdaLzcFP5gtwTjN6CiPvKBjVV8"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -48,
+        -256
+      ],
+      "id": "b617866c-c639-4ec8-b9b3-85ba1d61b4a7",
+      "name": "Caricamento allegato su Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "yFtMWGIpUi0iSkyM",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{($json.subject + $json.text + $json.to + $json.from + $json.nomeFile + $json.contenuto).match(/Crea cartella:\\s*([^\\r\\n]+)/i)?.[1].trim()}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Gls0TOSdaLzcFP5gtwTjN6CiPvKBjVV8",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Gls0TOSdaLzcFP5gtwTjN6CiPvKBjVV8"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        192,
+        128
+      ],
+      "id": "e38edbfb-f7d1-4e9b-98d7-dfff1ecdd769",
+      "name": "Create folder",
+      "alwaysOutputData": false,
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "yFtMWGIpUi0iSkyM",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Controlla il contenuto della mail per verificare la presenza della condizione specificata.",
+        "height": 224,
+        "width": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        112
+      ],
+      "id": "2483e694-5748-47ec-8e54-ed7b45f84a84",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Raggruppa l'ID della cartella creata e gli allegati.",
+        "height": 224,
+        "width": 160,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        608,
+        128
+      ],
+      "id": "14841ede-a65f-49aa-b1d2-ffa91cd946cd",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Crea un campo \"idCartella\" con il valore del campo \"id\", in modo che il dato non venga sovrascritto.",
+        "height": 272,
+        "width": 160,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        384,
+        0
+      ],
+      "id": "1db8f514-8d54-442f-8155-a0ec2528a9ac",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "binaryPropertyName": "allegati",
+        "destinationKey": "contenuto",
+        "options": {
+          "encoding": "utf8",
+          "keepSource": "json"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        272
+      ],
+      "id": "5b6f5695-a9c3-4b77-a4db-0146be953a10",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "da9788f2-ed51-4660-95ff-4e69b2800928",
+              "name": "idCartella",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        128
+      ],
+      "id": "587ef348-70b6-415d-acf5-0d38a0027824",
+      "name": "Crea campo"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "22cf11b1-58c7-495c-9d41-0520e28f419b",
+              "leftValue": "={{$json[\"subject\"]}}",
+              "rightValue": "crea cartella:\\s*\\S+",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "d5cf50c3-d8bf-46d4-8c7d-e89498a71d6b",
+              "leftValue": "={{$json[\"text\"]}}",
+              "rightValue": "crea cartella:\\s*\\S+",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "12bc656f-cec1-4e02-83e7-52985e843016",
+              "leftValue": "={{ $json.from.text }}",
+              "rightValue": "crea cartella:\\s*\\S+",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "8a0499d3-854c-4e8e-b258-ada3568055ba",
+              "leftValue": "={{ $json.to.text }}",
+              "rightValue": "crea cartella:\\s*\\S+",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "c1e9565d-071c-44ac-9c88-8aff6f41b2e8",
+              "leftValue": "={{$json[\"contenuto\"]}}",
+              "rightValue": "crea cartella:\\s*\\S+",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "2096b02c-bdc3-4838-8e47-7bb6418a7e46",
+              "leftValue": "={{$json[\"nomeFile\"]}}",
+              "rightValue": "crea cartella:\\s*\\S+",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -32,
+        208
+      ],
+      "id": "8a7bb1b8-37c7-4403-af77-ed4175bc0553",
+      "name": "If",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "content": "Raggruppa nome e contenuto degli allegati, e i dati della mail.",
+        "height": 240,
+        "width": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        128
+      ],
+      "id": "18b055ed-1368-41e5-b72f-d3ed77a1e1c0",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const allegati = [];\nfor (const item of items){\n  const binaries = item.binary;\n  for (const key in binaries){\n    allegati.push({\n      json: {nomeFile: binaries[key].fileName},\n      binary: {allegati: binaries[key]}\n    });\n  }\n}\nreturn allegati;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -704,
+        272
+      ],
+      "id": "09b6f490-2f5b-4dd6-b19f-93f6eceb656a",
+      "name": "Split in Batches"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -256,
+        208
+      ],
+      "id": "d366b206-c092-4424-9582-6b1d2908437a",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        640,
+        208
+      ],
+      "id": "11e77105-b6a3-4c66-9039-88008c4e1ae1",
+      "name": "Merge 1"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FLAWBE2H",
+          "mode": "list",
+          "cachedResultName": "n8n-slack"
+        },
+        "text": "=Hai ricevuto una mail. Gli allegati sono stati salvati sul tuo <https://drive.google.com/drive/folders/{{ $json.parents[0] }}|Google Drive>.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1088,
+        208
+      ],
+      "id": "371d9c19-9d2b-4640-90a6-352fdc534399",
+      "name": "Send a message1",
+      "webhookId": "6aabeb25-a892-45b3-a689-c7a1c4ed60ad",
+      "executeOnce": false,
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "oe9P2sr9oxB2nqo5",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -928,
+        208
+      ],
+      "id": "361e71a0-d2b8-43a9-b338-4c1a2b2bc3cb",
+      "name": "Ricezione mail1",
+      "executeOnce": true,
+      "retryOnFail": false,
+      "maxTries": 2,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "bn2PrEsQWHI2g4na",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "attachment_0",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json[\"idCartella\"] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        864,
+        208
+      ],
+      "id": "de117328-fcb1-4c30-bf14-975f96409c81",
+      "name": "Caricamento allegato su Drive1",
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "yFtMWGIpUi0iSkyM",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Ricezione mail1": [
+      {
+        "json": {
+          "id": "19d49d82ad9344e0",
+          "threadId": "19d49d82ad9344e0",
+          "labelIds": [
+            "UNREAD",
+            "INBOX"
+          ],
+          "sizeEstimate": 15174,
+          "headers": {
+            "delivered-to": "Delivered-To: danielefiordilino54@gmail.com",
+            "received": "Received: from AM0PR01MB12449.eurprd01.prod.exchangelabs.com\r\n ([fe80::cc94:1a08:35dd:9e3b]) by\r\n AM0PR01MB12449.eurprd01.prod.exchangelabs.com ([fe80::cc94:1a08:35dd:9e3b%6])\r\n with mapi id 15.20.9769.014; Wed, 1 Apr 2026 16:19:55 +0000",
+            "x-received": "X-Received: by 2002:a05:6000:2d0b:b0:43b:9df3:a1f6 with SMTP id ffacd0b85a97d-43d1508f3dbmr2805462f8f.2.1775060396787;\r\n        Wed, 01 Apr 2026 09:19:56 -0700 (PDT)",
+            "arc-seal": "ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;\r\n b=kvUwbgW8KZm/4yeeLGsWW8hiy+CZUvCQNCcWDupWLZxkQVyVX4T7PRLRH+dJ1KSa65NS6Ji8MqKdIdZZRqqlc5wd8+jmjRBIPMFHUxmCa5aYxAujnTw/sPO8L7ve/+I4xHCKwZS6IqT1VKk37SoQwp1k/2Lc0mqSEceCsW6CkAHbD7wSMsqa5hVWYeq+xyiyDFw1/DomP5sj8BOYaXVILXI5T/2xe7wrSHEfWoA/hIoUWpUHTN7NrdHICxwEkzx0VMOnjjLyHw4QtZNV1tIiYQ4YPC2B4xvMFr1R1Vu1JpT43klE0VNHGudAZMbJonNNVYFbbbXMu4XLbgCSGHeK6A==",
+            "arc-message-signature": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;\r\n s=arcselector10001;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;\r\n bh=iqH3Y7WgimLOTVyb8xDyzS4lEAFRc2JZll6mzHt3Qrs=;\r\n b=AgZojHfG/eNhb0VGnpDUKH+SJ1DJJ8ziTo8NbBOKPnd7uMI7WHkzMDcISivYIdqyD3hoFK3BxKvdSDqsxFyHlQRNW9N9BTcy42Na8BE4QkCzszees3CNoqqeuA9In7pMU8Yl8ghv9tCBg6R+KmCWJ5izcHlkqrMvUxUEZPBP3Jo22ognEx11UHBpRSRlCyrsMcHqXkrhJvlto1ic6QFb10WopsZGY8Z60KRjVVGIFGgMJaDtjp0bCCNL4RoK0kuCscxlRkgkAo+78xdxiE7Ce9wbdhyiYGkB9eFLuvk5OptB8HydEoPIcNmwFfv3KVmPkdolBAJbZ44oSF4ZRC9WQw==",
+            "arc-authentication-results": "ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;\r\n dkim=none; arc=none",
+            "return-path": "Return-Path: <daniele22fiordilino@hotmail.it>",
+            "received-spf": "Received-SPF: pass (google.com: domain of daniele22fiordilino@hotmail.it designates 2a01:111:f403:d207::1 as permitted sender) client-ip=2a01:111:f403:d207::1;",
+            "authentication-results": "Authentication-Results: mx.google.com;\r\n       dkim=pass header.i=@HOTMAIL.IT header.s=selector1 header.b=qloooRFR;\r\n       arc=pass (i=1);\r\n       spf=pass (google.com: domain of daniele22fiordilino@hotmail.it designates 2a01:111:f403:d207::1 as permitted sender) smtp.mailfrom=daniele22fiordilino@hotmail.it;\r\n       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=hotmail.it",
+            "dkim-signature": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=HOTMAIL.IT;\r\n s=selector1;\r\n h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;\r\n bh=iqH3Y7WgimLOTVyb8xDyzS4lEAFRc2JZll6mzHt3Qrs=;\r\n b=qloooRFR7sedjl3uLjj8jjOYqrtIdwYnsmazVXRU6nrozllPtBbSd6WQ9ZjJuFnIX5MR7wA0b5PeCrKC1cGRSKfLDPTt/OITnn8ndCrMAzKLEH8uZ9bBXIqnzjvpTICC6Q0Eh7cTBVaRJQ5vLaW3lqhK8/OUw15WTdnyka8XWv22siWN5N2Z0zfNfMJ7Ggb6epaa/lH889Ivu1iVmcNVsRy+XVDwSbAj51XDhu01SX43zUJnfxtN0xc5mTo9jIvO5S4Vt9+7R6wL/jLJpQAFsiACWrjauDCS1/b7hMyoLHj/lZzrL9MVZkiHBTazPO9MKHRXL9DaDmq3LIR/OPW+zg==",
+            "from": "From: Daniele Fiordilino <daniele22fiordilino@hotmail.it>",
+            "to": "To: n8n <danielefiordilino54@gmail.com>",
+            "subject": "Subject: Prova flusso",
+            "thread-topic": "Thread-Topic: Prova flusso",
+            "thread-index": "Thread-Index: AQHcwfNOjKMq+TXWkEKPFZ9S4SMuNg==",
+            "date": "Date: Wed, 1 Apr 2026 16:19:55 +0000",
+            "message-id": "Message-ID:\r\n <AM0PR01MB12449297774226FD76A4DB4F1C650A@AM0PR01MB12449.eurprd01.prod.exchangelabs.com>",
+            "accept-language": "Accept-Language: it-IT, en-US",
+            "content-language": "Content-Language: it-IT",
+            "x-ms-has-attach": "X-MS-Has-Attach: yes",
+            "x-ms-tnef-correlator": "X-MS-TNEF-Correlator:",
+            "msip_labels": "msip_labels:",
+            "x-ms-exchange-messagesentrepresentingtype": "x-ms-exchange-messagesentrepresentingtype: 1",
+            "x-ms-publictraffictype": "x-ms-publictraffictype: Email",
+            "x-ms-traffictypediagnostic": "x-ms-traffictypediagnostic: AM0PR01MB12449:EE_|PA4PR01MB9308:EE_",
+            "x-ms-office365-filtering-correlation-id": "x-ms-office365-filtering-correlation-id: a9a69c7a-e36f-4979-c10e-08de900a82d7",
+            "x-ms-exchange-slblob-mailprops": "x-ms-exchange-slblob-mailprops:\r\n JdQcnb18bc4BHB3F1hQh20leSl6i83VEtcnt8QusZ6cHCIF0ohcTM2/fKBfExWKSJU1e+d+CZ8iNu6jBfcElSXEcRsokXrLLtn9vvYm5mwJ1KSQhZgAkGFfENX6LAtUve1OLwKN/fECd1v+6ltrgp0yfOFNqDmgmfdewDGnTYcZrpZ2UewP9RQBoL/gumneo77lbJxWRX5aAZyWBz9EIfCT5vAiON6+Drfzy+IjoOH4gGhVC8/YGxhhr4QF6eKXhmM48EWDJlN2G34s6MsYu4bE+dx9aLkJgIRBp5Bt9+jOlqcXsHHMrsMw3WjGoMk+0ga6TJWiI36vdksMJN0ZSklu9Rg6BMEgBQvKjtyTMMxTInpWXYmExrIM4GfLaCR+u9HUny+7OBHYx9vQjlHngApl4d1RTQ2PnaKDeeIpFcYiMyAZO5g7I4AOQo+YLQ8YJSFZC2xkRjVMuhiL3QG0W3bmUPjxNOIIzzMKL67mIH0heC8NRjz4FScGqt6hpoBW75TvZdkrKGRARpYBeQv+U86174Hnh9/s08NJv06+z2N9Ahwda780ckXsa/e8lp7MAYZ3EmTAm1wxXKNew+QA1Z9FRvKVdKkr+Z40UH3fF1tIGplj9jT1thWxbHAnOMAwrKYG6rwqE3AA=",
+            "x-microsoft-antispam": "x-microsoft-antispam:\r\n BCL:0;ARA:14566002|31061999003|15080799012|6072599003|15030799006|461199028|6092099016|8060799015|8062599012|19110799012|51005399006|440099028|3412199025|102099032|26121999003|40105399003;",
+            "x-microsoft-antispam-message-info": "x-microsoft-antispam-message-info:\r\n =?utf-8?B?OEpsajI4aStEQW9NM2V4VThWZ2tOU1NjMzNLT284eTVYK21XTXZzSG5VSVJ6?=\r\n =?utf-8?B?UjhvbzlqK2QrWmlleTNqNHFkNzhEUkZBYjA4TnpHMVh0WUxOVUkzNmdsTHJL?=\r\n =?utf-8?B?bGJGOHdNb1BvbzBvbmNWUkFoYTVPVnowRS9vb2JSQVVxM3dyUDhuM2hTN3BJ?=\r\n =?utf-8?B?OEZWTXVhYXJ0WGZJNzhYNzZ2dXI3WDdKVE52Qm50WnVHcUIzbno4SnIxTk0y?=\r\n =?utf-8?B?bDVQQVRnVGwxaUpJa2JBYmsvMnMvYy9RSE9DSkwwcDJzZXlHdlNtSFJ2ajhz?=\r\n =?utf-8?B?U3hEeFJpekdBQzFxK2oyZ1pkYSsxaGlwTEpBYkc1RElSRUxnRW9mNmVCSTBM?=\r\n =?utf-8?B?aTQ1L0VSc05CM0RiRWpUZG1CM2FvSUFQYXpqRWIzVEhqa1V0c04xcXZKTkI3?=\r\n =?utf-8?B?UkpIYXhNdzk0VEZMMitJYTNoYkJtbWw2bnQrQmR1QU02NVdWMGIyWUc3NFRH?=\r\n =?utf-8?B?MWxpYTFaZ1Y3TmdvTmZoY2pYaEp4bkdzVE1FWWc0ZEk5MHNqK0YwL0g3SXBu?=\r\n =?utf-8?B?YTdpK2FvYkgyYzI0U1JRd1hIZ0NWTUpZNTFqZWVWQjdwMVU3b1RaL2xsREdY?=\r\n =?utf-8?B?bUdFamJzRldqNUNlNGVsL3dma0dORTQySDV5YmFWWHNsL29lZVhKaU9jL2F5?=\r\n =?utf-8?B?Q2pUOXk3MEs4OTBDUXBCRkMxdFlYSVkydGRlUVpZWVRMbkF4cGNlZmROakR0?=\r\n =?utf-8?B?VlBXQ2RmQ29NbnplaHkrWFBXNUp3bWExeUpxbEZCSFVFQm4vQXlldFJiSkpU?=\r\n =?utf-8?B?TWRMVUhreG8xZUdxZFBKR01MUWYzNnAxZ0hSSG9lczlYMCtjdEJrY0lPWW5J?=\r\n =?utf-8?B?OCtpMWZZbGU0b3c5WWFSSk5zNTdGdWZ2cHg0cmpzTUZpNmw2dTZIZG05enBX?=\r\n =?utf-8?B?djdvbytTWXlNaFJySVduWldhMGtveW9oa0hGQ2dSZnFuNTJPMFRnU283YWFU?=\r\n =?utf-8?B?Ykxwa0dVdE9YcjZDUENNdUs4VXNScEVHWFc5YmtWVzJxTVpDYUs1VTdBcnRl?=\r\n =?utf-8?B?bGJIOTdQQlBKTFdzZDc3cVNpV1ZPWkk2SDhZRVhFUHRXQlM5QjdQOTRkWkxF?=\r\n =?utf-8?B?OUFMTFlvUjhjMXhNWEd1NHVJMnovMndHUDBEa052VklCS3hpWDVrRW55enA2?=\r\n =?utf-8?B?VFZoY21HdGhHZVZ3MWFnRkdwdnF4bHZ2c3ZVMWF5dzVTaWkxTHZPUWY2Q3I5?=\r\n =?utf-8?B?MTlNbVN3ODRCdVpVZ1cxVzJLMExXTHVXRmFWM1hxTnl4YXhRL21xRnRnYzRE?=\r\n =?utf-8?B?UlNsTjN0d2RCWmNUcEgrVUF2TEo0WjFLOE90UUNzbGpKNDhnNitsdERxazZr?=\r\n =?utf-8?B?SktvV2lxNzg4SVNxQll2c3h2VnFkV2FLeEh0VWNMYjF5Z3FWRFF1eXV6cXlM?=\r\n =?utf-8?Q?pgHgQStd+9wbKi0ihMbgoVbbKaJRxx78=3D?=",
+            "x-ms-exchange-antispam-messagedata-chunkcount": "x-ms-exchange-antispam-messagedata-chunkcount: 1",
+            "x-ms-exchange-antispam-messagedata-0": "x-ms-exchange-antispam-messagedata-0:\r\n =?utf-8?B?ZGpaeEhTRFNWSGErdDZCY2N4dUVOaXZ4eDJLb05IQWxlTmZZQXJhQ0k3V1ho?=\r\n =?utf-8?B?U0JxWDNYQ2xwZis2dXkxWU02K29hVVZtNVQxOUpxYmkrWllmUFVtSmVURVk4?=\r\n =?utf-8?B?SHp3V2ZiTWUweTZtZmpQVWVDWEJjbktyZGZKSVlFMXJVck11cjQ4bEQ2NE1r?=\r\n =?utf-8?B?L2FwS1lLSzhxVzluUmQydXVYK1dvTkxETERyS0U4UGM0Nmt1ZDlzZCtzUzBi?=\r\n =?utf-8?B?NGxmcHUzNTBWaUJMU2NHZ0M5MjhXSVhLdEt3QlZaeXBSZmpJdk1EV29xUFVX?=\r\n =?utf-8?B?em1QeDNnVkFDRVpVdTBGOFpsZmYzZmd2TGVEYndFWWtJbHJOWlBnakZzTFIx?=\r\n =?utf-8?B?R3FJbWFYbjBGL1JJeStGK0M2aHloMGloQ2xZUWM5VmQyNVZmZ2tYRC8wNUE5?=\r\n =?utf-8?B?VHRuQmNkWkx1aW1xbFlVK3VSUjBpT2c5aUNwNm9RS0kwSUFoRDZCR3ptczdS?=\r\n =?utf-8?B?eWJNbnNnQllsczB5RGpZSEQzSlVhVlNjVHRncWgyTnhZSEFaZStiRTBnZTJF?=\r\n =?utf-8?B?UDBUbVUzbjcreGlWSDlyOTlvRlRiTWtnNWU1SXQ3bUtXSC81UzRxcFdzLzRS?=\r\n =?utf-8?B?OHZrZ25qNm9aTFFycENPK0g5NUM0b2RqT0FKbFlldDBEZUtsZzZvTUNoK0xs?=\r\n =?utf-8?B?ejJaTTJEWEpKem91NDl5N3UxWDFpRUkzMXp3U0t1YzlmU1MzZUJCbTlnS3Ry?=\r\n =?utf-8?B?QUJlOGJFWUdLc2ZwMGdhMU5mNlRGaWIzQXVtemRNZmJUQ2MyM0xmNzN4SDB6?=\r\n =?utf-8?B?Q04weVhRK3grV0FlbTJBYllPNld0MzAwdktkczlYQ3JrUDVmNmRKS0czTTFa?=\r\n =?utf-8?B?Wkk5VEZoTWt4eFBJS3RsUW9hSElsbTZZckc2eEdjTnFJZmNvemRPVGw2L2lO?=\r\n =?utf-8?B?ZnY1c25aVUtISXhnRUJTV0NDQ3hUTWg1c2pSZUtMSndOM0FWc08wTEJYckQx?=\r\n =?utf-8?B?RlJjNjZHL2I3SGl2SmU1dnlDWm9DRU1sN1lUU3QvMVp3cWpaeTlFSC9NZWMr?=\r\n =?utf-8?B?TXVobHBjL2x5MkJzYTgxSTJ6clBxK3ZSNGRlMktvUFJiemNtd3NRUm1CNVFF?=\r\n =?utf-8?B?RGYvVUVCUnJrVUZqam1tVENWeDQ4VldVOTh4eVJEZmFrMzZSMHpzdkNnVWtP?=\r\n =?utf-8?B?RVpJQzMwRmwzQVNGL2lnbUl0aWhIREZGL2hwaU9kTmthNUoyZE4rM1ZNUG0r?=\r\n =?utf-8?B?aWU5Y1RJWkYzdmtBZXMrWncrR3o3MkxVai9pblREZVhXb2JkdmladlNUSGw5?=\r\n =?utf-8?B?VkI1RHFiNXVidGNaaGRPanh1bXNaUUNsOHlnUDVpU3orYlFyR0F4TExQQnpK?=\r\n =?utf-8?B?NnBWZjFIeEJqSjFmbS9GRlgvaFVYeEhIU0t0WkhScWRhSjI3NkJPMXFBRmhZ?=\r\n =?utf-8?B?ekRzWkwzN2xQRWI1czh5TTVtSGJBR1pXRzNkTlpZaGJZUEltdzBoVzQrdVQ1?=\r\n =?utf-8?B?WDBnVk1QclZiQ2l6Q1p5TDIyUDJRRWU1N0xrWTFXVmtPZUowSFZQRVl0RWdL?=\r\n =?utf-8?B?Um5Na2QvUFN6TEN3RmtLdWFJOG96clRFQm8vUWhMRStvQkd1cUFjeUgvU0hq?=\r\n =?utf-8?B?b3d5UjA2R2ZLQ2NFdVhCK0hiSXZHS0hySStwZzdXbU8wWGJFTDNwM0RUNnFW?=\r\n =?utf-8?B?dDZqZi81VU5vOHVoeWRHTkNMZWNERldDSUYvU3VDanpsbWQ4bzlIUlpjMkll?=\r\n =?utf-8?B?WjZ0cnRmdUJzdXpYQnJneTQxMlMzVFloQUMvTm5mUzRIRFEwTFhEV2ZtdVI2?=\r\n =?utf-8?B?aXMvZEdOVUEvRlhQZE5qZ3hqb3RDaHlDSFBNdnBFcnk5NURoQkl2ckRDN0Ev?=\r\n =?utf-8?B?NmN5S2pmbkJ4MUhQeEc4NGNPSXhmMjNQaWU3V3lGWU9MRjNCMElKbzlQTlJa?=\r\n =?utf-8?Q?baVYPJyBEUEBZ?=",
+            "content-type": "Content-Type: multipart/mixed;\r\n\tboundary=\"_005_AM0PR01MB12449297774226FD76A4DB4F1C650AAM0PR01MB12449eu_\"",
+            "mime-version": "MIME-Version: 1.0",
+            "x-originatororg": "X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-d13a4.templateTenant",
+            "x-ms-exchange-crosstenant-authas": "X-MS-Exchange-CrossTenant-AuthAs: Internal",
+            "x-ms-exchange-crosstenant-authsource": "X-MS-Exchange-CrossTenant-AuthSource: AM0PR01MB12449.eurprd01.prod.exchangelabs.com",
+            "x-ms-exchange-crosstenant-rms-persistedconsumerorg": "X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000",
+            "x-ms-exchange-crosstenant-network-message-id": "X-MS-Exchange-CrossTenant-Network-Message-Id: a9a69c7a-e36f-4979-c10e-08de900a82d7",
+            "x-ms-exchange-crosstenant-originalarrivaltime": "X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2026 16:19:55.2234\r\n (UTC)",
+            "x-ms-exchange-crosstenant-fromentityheader": "X-MS-Exchange-CrossTenant-fromentityheader: Hosted",
+            "x-ms-exchange-crosstenant-id": "X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa",
+            "x-ms-exchange-transport-crosstenantheadersstamped": "X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR01MB9308"
+          },
+          "html": "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<style type=\"text/css\" style=\"display:none;\"> P {margin-top:0;margin-bottom:0;} </style>\n</head>\n<body dir=\"ltr\">\n<div style=\"font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\" class=\"elementToProof\">\nCrea cartella: cartella W1(2\n<div><span class=\"entityDelimiterBefore\">​</span><span class=\"_Entity _EType_OWALink _EId_OWALink _EReadonly_1\" style=\"display: inline-block;\"><span></span></span><span class=\"entityDelimiterAfter\">​</span></div>\n<div><span class=\"entityDelimiterBefore\">​</span><span class=\"_Entity _EType_OWALink _EId_OWALink_1 _EReadonly_1\" style=\"display: inline-block;\"><span></span></span><span class=\"entityDelimiterAfter\">​</span></div>\n)</div>\n<div id=\"Signature\" class=\"elementToProof\">\n<div style=\"font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);\">\n<br>\n</div>\n<div style=\"font-family: &quot;Frank Ruehl CLM MediumOblique&quot;; font-size: 13pt; color: rgb(0, 0, 0);\">\n<i>Daniele Fiordilino</i></div>\n</div>\n</body>\n</html>\n",
+          "text": "Crea cartella: cartella W1(2\n​​\n​​\n)\n\nDaniele Fiordilino\n",
+          "textAsHtml": "<p>Crea cartella: cartella W1(2<br/>&ZeroWidthSpace;&ZeroWidthSpace;<br/>&ZeroWidthSpace;&ZeroWidthSpace;<br/>)</p><p>Daniele Fiordilino</p>",
+          "subject": "Prova flusso",
+          "date": "2026-04-01T16:19:55.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "danielefiordilino54@gmail.com",
+                "name": "n8n"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">n8n</span> &lt;<a href=\"mailto:danielefiordilino54@gmail.com\" class=\"mp_address_email\">danielefiordilino54@gmail.com</a>&gt;</span>",
+            "text": "\"n8n\" <danielefiordilino54@gmail.com>"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "daniele22fiordilino@hotmail.it",
+                "name": "Daniele Fiordilino"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Daniele Fiordilino</span> &lt;<a href=\"mailto:daniele22fiordilino@hotmail.it\" class=\"mp_address_email\">daniele22fiordilino@hotmail.it</a>&gt;</span>",
+            "text": "\"Daniele Fiordilino\" <daniele22fiordilino@hotmail.it>"
+          },
+          "messageId": "<AM0PR01MB12449297774226FD76A4DB4F1C650A@AM0PR01MB12449.eurprd01.prod.exchangelabs.com>"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Ricezione mail": {
+      "main": [
+        [
+          {
+            "node": "Caricamento allegato su Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Caricamento allegato su Drive": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Crea campo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Crea campo": {
+      "main": [
+        [
+          {
+            "node": "Merge 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge 1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Split in Batches": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge 1": {
+      "main": [
+        [
+          {
+            "node": "Caricamento allegato su Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ricezione mail1": {
+      "main": [
+        [
+          {
+            "node": "Split in Batches",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Caricamento allegato su Drive1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v0",
+    "binaryMode": "separate",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "985389b6-35b3-48d5-8a45-c011f17ccc42",
+  "meta": {
+    "instanceId": "285e6b7035d57255323414f2adfae0530b9d9fde4f34f40ef0775256340f9783",
+    "templateCredsSetupCompleted": true
+  },
+  "id": "MbThvPZDEUIKtksl",
+  "tags": [
+    {
+      "updatedAt": "2026-04-02T02:22:20.430Z",
+      "createdAt": "2026-04-02T02:22:20.430Z",
+      "id": "4cDUE6nfNbvVML0X",
+      "name": "Gmail"
+    },
+    {
+      "updatedAt": "2026-04-02T02:24:19.040Z",
+      "createdAt": "2026-04-02T02:24:19.040Z",
+      "id": "ExTLzdRyt6LJs0cw",
+      "name": "Google Drive"
+    },
+    {
+      "updatedAt": "2026-04-02T02:24:23.981Z",
+      "createdAt": "2026-04-02T02:24:23.981Z",
+      "id": "FFlCI8L38YjiyRSk",
+      "name": "Slack"
+    }
+  ]
+}
