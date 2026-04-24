@@ -1,6 +1,6 @@
 # W1 - Gmail Management
-* A workflow that automatically reads emails in Gmail, saves the attachments in Drive, and notifies everything via Slack.
-* A workflow that automatically reads messages in Slack, creates a file in Drive, and sends it via email.
+* A workflow that automatically reads emails in **Gmail**, saves the attachments in **Drive**, and notifies everything via **Slack**.
+* A workflow that automatically reads messages in **Slack**, creates a file in **Drive**, and sends it via email.
 
 
 
