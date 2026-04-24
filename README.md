@@ -1,10 +1,10 @@
-###### W1 - Gmail Management
+# W1 - Gmail Management
 * A workflow that automatically reads emails in Gmail, saves the attachments in Drive, and notifies everything via Slack.
 * A workflow that automatically reads messages in Slack, creates a file in Drive, and sends it via email.
 
 
 
-###### How to use the project:
+## How to use the project
 
 **The project was created in n8n.**
 
@@ -13,6 +13,6 @@
 
 
 
-###### Tools used:
+## Tools used
 
 **n8n, Gmail, Google Drive, Slack.**
